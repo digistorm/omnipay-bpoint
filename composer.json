@@ -1,0 +1,25 @@
+{
+    "name": "digistorm/omnipay-bpoint",
+    "type": "library",
+    "description": "BPoint driver for the Omnipay payment processing library",
+    "keywords": [
+        "gateway",
+        "merchant",
+        "omnipay",
+        "pay",
+        "payment",
+        "bpoint"
+    ],
+    "homepage": "https://github.com/digistorm/omnipay-bpoint",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": { "Omnipay\\Bpoint\\" : "src/" }
+    },
+    "require": {
+        "omnipay/common": "^3"
+    },
+    "require-dev": {
+        "omnipay/tests": "^3"
+    },
+    "prefer-stable": true
+}
