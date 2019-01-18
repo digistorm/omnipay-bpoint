@@ -10,6 +10,7 @@ Currently only supports tokenized purchases with two available methods:
 ## Usage
 
 ```php
+<?php
 // Create a gateway for the Bpoint Gateway
 // (routes to GatewayFactory::create)
 $gateway = Omnipay::create('Bpoint');
