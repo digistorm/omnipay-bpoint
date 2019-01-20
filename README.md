@@ -27,6 +27,7 @@ $gateway->setPassword('passwordValue');
 $gateway->setMerchantNumber('merchantIdValue');
 
 // Tokenize a card
+/* @var \Omnipay\Bpoint\Message\Response $response */
 $response = $gateway->createToken([
     'card' => new CreditCard([
         'number' => '4987654321098769',
@@ -41,8 +42,13 @@ $response = $gateway->createToken([
     'crn3' => null,
 ])->send();
 
+if (!$response->isSuccessful()) {
+    // handle errors
+}
+
 // Charge using a token
-$gateway->purchase([
+/* @var \Omnipay\Bpoint\Message\Response $response */
+$response = $gateway->purchase([
     'card' => new CreditCard([
         'number' => $response->getToken(),
         'cvv' => '987',
