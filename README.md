@@ -18,12 +18,13 @@ use Omnipay\Common\CreditCard;
 
 // Create a gateway for the Bpoint Gateway
 // (routes to GatewayFactory::create)
+/* @var \Omnipay\Bpoint\Gateway $gateway */
 $gateway = Omnipay::create('Bpoint');
 
 $gateway->setTestMode(true);
 $gateway->setUsername('usernameValue');
 $gateway->setPassword('passwordValue');
-$gateway->setMerchantId('merchantIdValue');
+$gateway->setMerchantNumber('merchantIdValue');
 
 // Tokenize a card
 $response = $gateway->createToken([
