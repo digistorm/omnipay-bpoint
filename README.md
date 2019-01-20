@@ -1,6 +1,8 @@
 # Omnipay: BPoint
 
-**BPoint driver for the Omnipay PHP payment processing library**
+**BPoint v3 driver for the Omnipay PHP payment processing library**
+
+BPoint v3 API: https://www.bpoint.com.au/developers/v3/index.htm#!#api
 
 Currently only supports tokenized purchases with two available methods:
 
