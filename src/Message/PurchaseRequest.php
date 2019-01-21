@@ -41,7 +41,9 @@ class PurchaseRequest extends AbstractRequest
         $payload["Action"] = 'payment';
         $payload["Amount"] = $this->getAmountInteger();
         $payload["Currency"] = $this->getCurrency();
-        $payload["MerchantReference"] = substr($this->getDescription(), 0, 50);
+        if ($this->getDescription()) {
+            $payload["MerchantReference"] = substr($this->getDescription(), 0, 50);
+        }
         $payload["Crn1"] = $this->getCrn1();
         $payload["Crn2"] = $this->getCrn2();
         $payload["Crn3"] = $this->getCrn3();
@@ -56,16 +58,16 @@ class PurchaseRequest extends AbstractRequest
         ];
 
         // Unsupported optional params
-        $payload["AmountOriginal"] = null;
-        $payload["AmountSurcharge"] = null;
-        $payload["BillerCode"] = null;
-        $payload["Customer"] = null;
-        $payload["EmailAddress"] = null;
-        $payload["FraudScreeningRequest"] = null;
-        $payload["Order"] = null;
-        $payload["OriginalTxnNumber"] = null;
-        $payload["StatementDescriptor"] = null;
-        $payload["TokenisationMode"] = null;
+//        $payload["AmountOriginal"] = null;
+//        $payload["AmountSurcharge"] = null;
+//        $payload["BillerCode"] = null;
+//        $payload["Customer"] = null;
+//        $payload["EmailAddress"] = null;
+//        $payload["FraudScreeningRequest"] = null;
+//        $payload["Order"] = null;
+//        $payload["OriginalTxnNumber"] = null;
+//        $payload["StatementDescriptor"] = null;
+//        $payload["TokenisationMode"] = null;
 
         $data["TxnReq"] = $payload;
 

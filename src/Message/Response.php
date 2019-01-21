@@ -21,7 +21,11 @@ class Response extends AbstractResponse
     {
         parent::__construct($request, $data);
 
-        $this->data = json_decode($this->data, true);
+        $data = json_decode($this->data, true);
+
+        if ($data) {
+            $this->data = $data;
+        }
     }
 
     /**

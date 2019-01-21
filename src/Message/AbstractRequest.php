@@ -118,8 +118,12 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      */
     public function sendData($data)
     {
-        $headers = ['Authorization' => base64_encode($this->getUsername() . '|' . $this->getMerchantNumber() . ':' . $this->getPassword())];
-        $body = $data ? http_build_query($data, '', '&') : null;
+        $authString = $this->getUsername() . '|' . $this->getMerchantNumber() . ':' . $this->getPassword();
+        $headers = [
+            'Authorization' => base64_encode($authString),
+            'Content-Type' => 'application/json; charset=utf-8',
+        ];
+        $body = json_encode($data);
         $httpResponse = $this->httpClient->request($this->getHttpMethod(), $this->getEndpoint(), $headers, $body);
 
         return $this->createResponse($httpResponse->getBody()->getContents());
