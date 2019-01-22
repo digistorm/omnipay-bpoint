@@ -227,7 +227,6 @@ class PurchaseResponse extends AbstractResponse
             if (isset($this->data['ErrorString'])) {
                 return $this->data['ErrorString'];
             }
-
             if (isset($this->data['TxnResp']['ResponseCode'], $this->data['TxnResp']['ResponseText'])) {
                 $responseCode = $this->data['TxnResp']['ResponseCode'];
                 $responseText = $this->data['TxnResp']['ResponseText'];
@@ -270,16 +269,17 @@ class PurchaseResponse extends AbstractResponse
             if (isset($this->data['ErrorCode'])) {
                 return $this->data['ErrorCode'];
             }
+            if (isset($this->data['TxnResp']['ResponseCode'], $this->data['TxnResp']['ResponseText'])) {
+                $responseCode = $this->data['TxnResp']['ResponseCode'];
 
-            $responseCode = $this->data['TxnResp']['ResponseCode'];
+                // Transaction response codes 1-5 will use the bank response code and message
+                if ($responseCode == '1' || $responseCode == '2' || $responseCode == '3' || $responseCode == '4' || $responseCode == '5') {
+                    $bankResponseCode = $this->data['TxnResp']['BankResponseCode'];
+                    return $bankResponseCode;
+                }
 
-            // Transaction response codes 1-5 will use the bank response code and message
-            if ($responseCode == '1' || $responseCode == '2' || $responseCode == '3' || $responseCode == '4' || $responseCode == '5') {
-                $bankResponseCode = $this->data['TxnResp']['BankResponseCode'];
-                return $bankResponseCode;
+                return $responseCode;
             }
-
-            return $responseCode;
         }
 
         return null;
@@ -292,7 +292,9 @@ class PurchaseResponse extends AbstractResponse
      */
     public function getTransactionReference()
     {
-        return null;
+        if (isset($this->data['TxnResp']['TxnNumber'])) {
+            return $this->data['TxnResp']['TxnNumber'];
+        }
     }
 
     /**

@@ -80,12 +80,30 @@ class Gateway extends AbstractGateway
     public function getDefaultParameters()
     {
         return array(
+            'endpoint' => 'https://www.bpoint.com.au/webapi/v3',
             'username' => '',
             'password' => '',
             'merchantNumber' => '',
         );
     }
 
+    /**
+     * @return string
+     */
+    public function getEndpoint()
+    {
+        return $this->getParameter('endpoint');
+    }
+
+    /**
+     * @param $value
+     *
+     * @return \Omnipay\Bpoint\Gateway
+     */
+    public function setEndpoint($value)
+    {
+        return $this->setParameter('endpoint', $value);
+    }
 
     /**
      * @return string

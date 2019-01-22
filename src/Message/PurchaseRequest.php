@@ -79,7 +79,7 @@ class PurchaseRequest extends AbstractRequest
      */
     public function getEndpoint()
     {
-        return $this->endpoint . '/txns';
+        return parent::getEndpoint() . '/txns';
     }
 
     /**

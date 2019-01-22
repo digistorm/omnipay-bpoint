@@ -40,10 +40,16 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
     /**
      * Live or Test Endpoint URL.
-     *
-     * @var string URL
      */
-    protected $endpoint = 'https://www.bpoint.com.au/webapi/v3';
+    public function getEndpoint()
+    {
+        return $this->getParameter('endpoint');
+    }
+
+    public function setEndpoint($value)
+    {
+        return $this->setParameter('endpoint', $value);
+    }
 
     /**
      * @return string
@@ -99,7 +105,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('password', $value);
     }
 
-    abstract public function getEndpoint();
     abstract protected function createResponse($data);
 
     /**
