@@ -5,8 +5,9 @@
  */
 namespace Omnipay\Bpoint;
 
-use Omnipay\Common\AbstractGateway;
+use Omnipay\Bpoint\Message\PurchaseRequest;
 use Omnipay\Bpoint\Message\CreateTokenRequest;
+use Omnipay\Common\AbstractGateway;
 
 /**
  * Bpoint Gateway.
@@ -143,26 +144,24 @@ class Gateway extends AbstractGateway
     /**
      * Purchase request.
      *
-     *
-     *
      * @param array $parameters
      *
-     * @return \Omnipay\Bpoint\Message\PurchaseRequest
+     * @return \Omnipay\Bpoint\Message\PurchaseRequest|\Omnipay\Common\Message\AbstractRequest
      */
     public function purchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Bpoint\Message\PurchaseRequest', $parameters);
+        return $this->createRequest(PurchaseRequest::class, $parameters);
     }
 
     /**
-     *
+     * Create token request.
      *
      * @param array $parameters parameters to be passed in to the TokenRequest.
      *
-     * @return CreateTokenRequest|\Omnipay\Common\Message\AbstractRequest The create token request.
+     * @return \Omnipay\Bpoint\Message\CreateTokenRequest|\Omnipay\Common\Message\AbstractRequest The create token request.
      */
     public function createToken(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Bpoint\Message\CreateTokenRequest', $parameters);
+        return $this->createRequest(CreateTokenRequest::class, $parameters);
     }
 }

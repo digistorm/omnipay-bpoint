@@ -5,7 +5,6 @@
  */
 namespace Omnipay\Bpoint\Message;
 
-use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RequestInterface;
 
 /**
@@ -15,7 +14,7 @@ use Omnipay\Common\Message\RequestInterface;
  *
  * @see \Omnipay\Bpoint\Gateway
  */
-class Response extends AbstractResponse
+abstract class AbstractResponse extends \Omnipay\Common\Message\AbstractResponse
 {
     public function __construct(RequestInterface $request, $data)
     {
@@ -39,11 +38,11 @@ class Response extends AbstractResponse
             return false;
         }
 
-        return $this->data['APIResponse']['ResponseCode'] === 0;
+        return $this->data['APIResponse']['ResponseCode'] == 0;
     }
 
     /**
-     * Get a token, for createCard requests.
+     * Get a token, for createToken requests.
      *
      * @return string|null
      */

@@ -30,7 +30,7 @@ class CreateTokenRequestTest extends TestCase
 
     /**
      * @expectedException \Omnipay\Common\Exception\InvalidRequestException
-     * @expectedExceptionMessage You must pass a 'card' parameter.
+     * @expectedExceptionMessage You must pass a "card" parameter.
      */
     public function testGetDataInvalid()
     {

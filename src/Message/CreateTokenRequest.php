@@ -26,7 +26,7 @@ class CreateTokenRequest extends AbstractRequest
         $data = [];
 
         if (!$this->getParameter('card')) {
-            throw new InvalidRequestException("You must pass a 'card' parameter.");
+            throw new InvalidRequestException('You must pass a "card" parameter.');
         }
 
         /* @var $card \OmniPay\Common\CreditCard */
@@ -37,20 +37,20 @@ class CreateTokenRequest extends AbstractRequest
             'TestMode' => $this->getTestMode(),
         ];
 
-        $payload["BankAccountDetails"] = null;
-        $payload["CardDetails"] = [
-            "CardHolderName" => $card->getBillingName(),
-            "CardNumber" => $card->getNumber(),
-            "Cvn" => $card->getCvv(),
-            "ExpiryDate" => $card->getExpiryDate('my'),
+        $payload['BankAccountDetails'] = null;
+        $payload['CardDetails'] = [
+            'CardHolderName' => $card->getBillingName(),
+            'CardNumber' => $card->getNumber(),
+            'Cvn' => $card->getCvv(),
+            'ExpiryDate' => $card->getExpiryDate('my'),
         ];
-        $payload["AcceptBADirectDebitTC"] = true;
-        $payload["EmailAddress"] = null;
-        $payload["Crn1"] = $this->getCrn1();
-        $payload["Crn2"] = $this->getCrn2();
-        $payload["Crn3"] = $this->getCrn3();
+        $payload['AcceptBADirectDebitTC'] = true;
+        $payload['EmailAddress'] = null;
+        $payload['Crn1'] = $this->getCrn1();
+        $payload['Crn2'] = $this->getCrn2();
+        $payload['Crn3'] = $this->getCrn3();
 
-        $data["DVTokenReq"] = $payload;
+        $data['DVTokenReq'] = $payload;
 
         return $data;
     }
@@ -63,5 +63,15 @@ class CreateTokenRequest extends AbstractRequest
     public function getEndpoint()
     {
         return $this->endpoint . '/dvtokens';
+    }
+
+    /**
+     * @param       $data
+     *
+     * @return \Omnipay\Bpoint\Message\CreateTokenResponse
+     */
+    protected function createResponse($data)
+    {
+        return $this->response = new CreateTokenResponse($this, $data);
     }
 }

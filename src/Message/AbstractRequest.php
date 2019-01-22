@@ -100,6 +100,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     }
 
     abstract public function getEndpoint();
+    abstract protected function createResponse($data);
 
     /**
      * Get HTTP Method.
@@ -127,16 +128,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         $httpResponse = $this->httpClient->request($this->getHttpMethod(), $this->getEndpoint(), $headers, $body);
 
         return $this->createResponse($httpResponse->getBody()->getContents());
-    }
-
-    /**
-     * @param       $data
-     *
-     * @return \Omnipay\Bpoint\Message\Response
-     */
-    protected function createResponse($data)
-    {
-        return $this->response = new Response($this, $data);
     }
 
     /**

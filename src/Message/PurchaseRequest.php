@@ -25,7 +25,7 @@ class PurchaseRequest extends AbstractRequest
         $this->validate('amount', 'currency');
 
         if (!$this->getParameter('card')) {
-            throw new InvalidRequestException("You must pass a 'card' parameter.");
+            throw new InvalidRequestException('You must pass a "card" parameter.');
         }
 
         /* @var $card \OmniPay\Common\CreditCard */
@@ -38,44 +38,57 @@ class PurchaseRequest extends AbstractRequest
             'TestMode' => $this->getTestMode(),
         ];
 
-        $payload["Action"] = 'payment';
-        $payload["Amount"] = $this->getAmountInteger();
-        $payload["Currency"] = $this->getCurrency();
+        $payload['Action'] = 'payment';
+        $payload['Amount'] = $this->getAmountInteger();
+        $payload['Currency'] = $this->getCurrency();
         if ($this->getDescription()) {
-            $payload["MerchantReference"] = substr($this->getDescription(), 0, 50);
+            $payload['MerchantReference'] = substr($this->getDescription(), 0, 50);
         }
-        $payload["Crn1"] = $this->getCrn1();
-        $payload["Crn2"] = $this->getCrn2();
-        $payload["Crn3"] = $this->getCrn3();
-        $payload["StoreCard"] = false;
-        $payload["SubType"] = 'single';
-        $payload["Type"] = 'internet';
-        $payload["CardDetails"] = [
-            "CardHolderName" => $card->getBillingName(),
-            "CardNumber" => $card->getNumber(),
-            "Cvn" => $card->getCvv(),
-            "ExpiryDate" => $card->getExpiryDate('my'),
+        $payload['Crn1'] = $this->getCrn1();
+        $payload['Crn2'] = $this->getCrn2();
+        $payload['Crn3'] = $this->getCrn3();
+        $payload['StoreCard'] = false;
+        $payload['SubType'] = 'single';
+        $payload['Type'] = 'internet';
+        $payload['CardDetails'] = [
+            'CardHolderName' => $card->getBillingName(),
+            'CardNumber' => $card->getNumber(),
+            'Cvn' => $card->getCvv(),
+            'ExpiryDate' => $card->getExpiryDate('my'),
         ];
 
-        // Unsupported optional params
-//        $payload["AmountOriginal"] = null;
-//        $payload["AmountSurcharge"] = null;
-//        $payload["BillerCode"] = null;
-//        $payload["Customer"] = null;
-//        $payload["EmailAddress"] = null;
-//        $payload["FraudScreeningRequest"] = null;
-//        $payload["Order"] = null;
-//        $payload["OriginalTxnNumber"] = null;
-//        $payload["StatementDescriptor"] = null;
-//        $payload["TokenisationMode"] = null;
+        // Currently unsupported optional params
+        $payload['AmountOriginal'] = null;
+        $payload['AmountSurcharge'] = null;
+        $payload['BillerCode'] = null;
+        $payload['Customer'] = null;
+        $payload['EmailAddress'] = null;
+        $payload['FraudScreeningRequest'] = null;
+        $payload['Order'] = null;
+        $payload['OriginalTxnNumber'] = null;
+        $payload['StatementDescriptor'] = null;
+        $payload['TokenisationMode'] = null;
 
-        $data["TxnReq"] = $payload;
+        $data['TxnReq'] = $payload;
 
         return $data;
     }
 
+    /**
+     * @return string
+     */
     public function getEndpoint()
     {
         return $this->endpoint . '/txns';
+    }
+
+    /**
+     * @param       $data
+     *
+     * @return \Omnipay\Bpoint\Message\PurchaseResponse
+     */
+    protected function createResponse($data)
+    {
+        return $this->response = new PurchaseResponse($this, $data);
     }
 }
