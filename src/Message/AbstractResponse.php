@@ -20,10 +20,20 @@ abstract class AbstractResponse extends \Omnipay\Common\Message\AbstractResponse
     {
         parent::__construct($request, $data);
 
-        $data = json_decode($this->data, true);
+        $arrayData = json_decode($data, true);
 
-        if ($data) {
-            $this->data = $data;
+        if (is_array($arrayData)) {
+            $this->data = $arrayData;
+        } else {
+            if (preg_match('/^\<!doctype html/i', $data) && preg_match('/\<title>([^<]+)\<\/title>/i', $data, $matches)) {
+                $errorString = $matches[1];
+            } else {
+                $errorString = substr($data, 0, 255);
+            }
+            $this->data = [
+                'ErrorString' => $errorString,
+                'ErrorCode' => 500,
+            ];
         }
     }
 
@@ -68,6 +78,10 @@ abstract class AbstractResponse extends \Omnipay\Common\Message\AbstractResponse
             return $this->data['APIResponse']['ResponseText'];
         }
 
+        if (isset($this->data['ErrorString'])) {
+            return $this->data['ErrorString'];
+        }
+
         return null;
     }
 
@@ -82,6 +96,10 @@ abstract class AbstractResponse extends \Omnipay\Common\Message\AbstractResponse
     {
         if (!$this->isSuccessful() && isset($this->data['APIResponse']) && isset($this->data['APIResponse']['ResponseCode'])) {
             return $this->data['APIResponse']['ResponseCode'];
+        }
+
+        if (isset($this->data['ErrorCode'])) {
+            return $this->data['ErrorCode'];
         }
 
         return null;

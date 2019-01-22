@@ -58,16 +58,16 @@ class PurchaseRequest extends AbstractRequest
         ];
 
         // Currently unsupported optional params
-        $payload['AmountOriginal'] = null;
-        $payload['AmountSurcharge'] = null;
-        $payload['BillerCode'] = null;
-        $payload['Customer'] = null;
-        $payload['EmailAddress'] = null;
-        $payload['FraudScreeningRequest'] = null;
-        $payload['Order'] = null;
-        $payload['OriginalTxnNumber'] = null;
-        $payload['StatementDescriptor'] = null;
-        $payload['TokenisationMode'] = null;
+//        $payload['AmountOriginal'] = null;
+//        $payload['AmountSurcharge'] = null;
+//        $payload['BillerCode'] = null;
+//        $payload['Customer'] = null;
+//        $payload['EmailAddress'] = null;
+//        $payload['FraudScreeningRequest'] = null;
+//        $payload['Order'] = null;
+//        $payload['OriginalTxnNumber'] = null;
+//        $payload['StatementDescriptor'] = null;
+//        $payload['TokenisationMode'] = null;
 
         $data['TxnReq'] = $payload;
 
