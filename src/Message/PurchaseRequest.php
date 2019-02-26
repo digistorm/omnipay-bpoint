@@ -79,7 +79,7 @@ class PurchaseRequest extends AbstractRequest
      */
     public function getEndpoint()
     {
-        return parent::getEndpoint() . '/txns';
+        return parent::getEndpointBase() . '/txns';
     }
 
     /**

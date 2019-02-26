@@ -62,7 +62,7 @@ class CreateTokenRequest extends AbstractRequest
      */
     public function getEndpoint()
     {
-        return parent::getEndpoint() . '/dvtokens';
+        return parent::getEndpointBase() . '/dvtokens';
     }
 
     /**

@@ -95,20 +95,20 @@ class GatewayTest extends GatewayTestCase
         $this->assertEquals(true, $data['TxnReq']['TestMode']);
         $this->assertEquals('payment', $data['TxnReq']['Action']);
         $this->assertEquals(1000, $data['TxnReq']['Amount']);
-        $this->assertEquals(null, $data['TxnReq']['AmountOriginal']);
-        $this->assertEquals(null, $data['TxnReq']['AmountSurcharge']);
+//        $this->assertEquals(null, $data['TxnReq']['AmountOriginal']);
+//        $this->assertEquals(null, $data['TxnReq']['AmountSurcharge']);
         $this->assertEquals($expectedCardDetails,   $data['TxnReq']['CardDetails']);
         $this->assertEquals('AUD', $data['TxnReq']['Currency']);
-        $this->assertEquals(null, $data['TxnReq']['Customer']);
+//        $this->assertEquals(null, $data['TxnReq']['Customer']);
         $this->assertEquals('Here is a description that is over 50 characters l', $data['TxnReq']['MerchantReference']);
-        $this->assertEquals(null, $data['TxnReq']['Order']);
-        $this->assertEquals(null, $data['TxnReq']['OriginalTxnNumber']);
+//        $this->assertEquals(null, $data['TxnReq']['Order']);
+//        $this->assertEquals(null, $data['TxnReq']['OriginalTxnNumber']);
         $this->assertEquals(null, $data['TxnReq']['StoreCard']);
         $this->assertEquals('single', $data['TxnReq']['SubType']);
-        $this->assertEquals(null, $data['TxnReq']['TokenisationMode']);
+//        $this->assertEquals(null, $data['TxnReq']['TokenisationMode']);
         $this->assertEquals('internet', $data['TxnReq']['Type']);
-        $this->assertEquals(null, $data['TxnReq']['FraudScreeningRequest']);
-        $this->assertEquals(null, $data['TxnReq']['StatementDescriptor']);
+//        $this->assertEquals(null, $data['TxnReq']['FraudScreeningRequest']);
+//        $this->assertEquals(null, $data['TxnReq']['StatementDescriptor']);
 
     }
 }

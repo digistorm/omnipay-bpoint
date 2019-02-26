@@ -21,11 +21,12 @@ class CreateTokenRequestTest extends TestCase
     {
         parent::setUp();
         $this->request = new CreateTokenRequest($this->getHttpClient(), $this->getHttpRequest());
+        $this->request->setEndpointBase('http://example.com');
     }
 
     public function testEndpoint()
     {
-        $this->assertSame('https://www.bpoint.com.au/webapi/v3/dvtokens', $this->request->getEndpoint());
+        $this->assertSame('http://example.com/dvtokens', $this->request->getEndpoint());
     }
 
     /**
