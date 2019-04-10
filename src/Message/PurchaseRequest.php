@@ -40,6 +40,7 @@ class PurchaseRequest extends AbstractRequest
 
         $payload['Action'] = 'payment';
         $payload['Amount'] = $this->getAmountInteger();
+        $payload['AmountSurcharge'] = $this->getAmountSurcharge();
         $payload['Currency'] = $this->getCurrency();
         if ($this->getDescription()) {
             $payload['MerchantReference'] = substr($this->getDescription(), 0, 50);
@@ -59,7 +60,6 @@ class PurchaseRequest extends AbstractRequest
 
         // Currently unsupported optional params
 //        $payload['AmountOriginal'] = null;
-//        $payload['AmountSurcharge'] = null;
 //        $payload['BillerCode'] = null;
 //        $payload['Customer'] = null;
 //        $payload['EmailAddress'] = null;
@@ -80,6 +80,24 @@ class PurchaseRequest extends AbstractRequest
     public function getEndpoint()
     {
         return parent::getEndpointBase() . '/txns';
+    }
+
+    /**
+     * @return integer
+     */
+    public function getAmountSurcharge()
+    {
+        return $this->getParameter('amountSurcharge');
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return \Omnipay\Bpoint\Message\AbstractRequest provides a fluent interface.
+     */
+    public function setAmountSurcharge($value)
+    {
+        return $this->setParameter('amountSurcharge', $value);
     }
 
     /**
