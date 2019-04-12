@@ -40,7 +40,9 @@ class PurchaseRequest extends AbstractRequest
 
         $payload['Action'] = 'payment';
         $payload['Amount'] = $this->getAmountInteger();
-        $payload['AmountSurcharge'] = $this->getAmountSurcharge();
+        if ($this->getAmountSurcharge()) {
+            $payload['AmountSurcharge'] = $this->getAmountSurcharge();
+        }
         $payload['Currency'] = $this->getCurrency();
         if ($this->getDescription()) {
             $payload['MerchantReference'] = substr($this->getDescription(), 0, 50);
