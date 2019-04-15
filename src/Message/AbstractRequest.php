@@ -189,6 +189,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      */
     protected function filter($string, $maxLength = 50)
     {
-        return substr(preg_replace('/[^a-zA-Z0-9 ]/', '', $string), 0, $maxLength);
+        return substr(preg_replace('/[^a-zA-Z0-9 \-]/', '', $string), 0, $maxLength);
     }
 }
