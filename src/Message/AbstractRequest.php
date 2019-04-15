@@ -178,4 +178,17 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             return $money;
         }
     }
+
+    /**
+     * Filter a string value so it will not break the API request.
+     *
+     * @param     $string
+     * @param int $maxLength
+     *
+     * @return bool|string
+     */
+    protected function filter($string, $maxLength = 50)
+    {
+        return substr(preg_replace('/[^a-zA-Z0-9 ]/', '', $string), 0, $maxLength);
+    }
 }

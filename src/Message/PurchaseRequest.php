@@ -45,11 +45,15 @@ class PurchaseRequest extends AbstractRequest
         }
         $payload['Currency'] = $this->getCurrency();
         if ($this->getDescription()) {
-            $payload['MerchantReference'] = substr($this->getDescription(), 0, 50);
+            $payload['MerchantReference'] = $this->filter($this->getDescription());
         }
-        $payload['Crn1'] = $this->getCrn1();
-        $payload['Crn2'] = $this->getCrn2();
-        $payload['Crn3'] = $this->getCrn3();
+        $payload['Crn1'] = $this->filter($this->getCrn1());
+        if ($this->getCrn2()) {
+            $payload['Crn2'] = $this->filter($this->getCrn2());
+        }
+        if ($this->getCrn3()) {
+            $payload['Crn3'] = $this->filter($this->getCrn3());
+        }
         $payload['StoreCard'] = false;
         $payload['SubType'] = 'single';
         $payload['Type'] = 'internet';
