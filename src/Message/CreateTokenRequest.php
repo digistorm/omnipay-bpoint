@@ -50,6 +50,10 @@ class CreateTokenRequest extends AbstractRequest
         $payload['Crn2'] = $this->getCrn2();
         $payload['Crn3'] = $this->getCrn3();
 
+        if ($this->getBillerCode()) {
+            $payload['BillerCode'] = $this->filter($this->getBillerCode());
+        }
+
         $data['DVTokenReq'] = $payload;
 
         return $data;

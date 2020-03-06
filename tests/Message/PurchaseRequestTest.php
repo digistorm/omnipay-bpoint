@@ -41,4 +41,10 @@ class PurchaseRequestTest extends TestCase
         $this->assertNull($response->getCardReference());
         $this->assertSame('Your card was declined', $response->getMessage());
     }
+
+    public function testBillerCode()
+    {
+        $this->assertSame($this->request, $this->request->setBillerCode('abc123'));
+        $this->assertSame('abc123', $this->request->getBillerCode());
+    }
 }

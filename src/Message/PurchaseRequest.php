@@ -64,9 +64,12 @@ class PurchaseRequest extends AbstractRequest
             'ExpiryDate' => $card->getExpiryDate('my'),
         ];
 
+        if ($this->getBillerCode()) {
+            $payload['BillerCode'] = $this->filter($this->getBillerCode());
+        }
+
         // Currently unsupported optional params
 //        $payload['AmountOriginal'] = null;
-//        $payload['BillerCode'] = null;
 //        $payload['Customer'] = null;
 //        $payload['EmailAddress'] = null;
 //        $payload['FraudScreeningRequest'] = null;
