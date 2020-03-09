@@ -57,4 +57,22 @@ trait CommonParametersTrait
     {
         return $this->setParameter('crn3', $value);
     }
+
+    /**
+     * @return string
+     */
+    public function getBillerCode()
+    {
+        return $this->getParameter('billerCode');
+    }
+
+    /**
+     * @param $value
+     *
+     * @return AbstractRequest provides a fluent interface.
+     */
+    public function setBillerCode($value)
+    {
+        return $this->setParameter('billerCode', $value);
+    }
 }
