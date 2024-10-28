@@ -1,15 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Bpoint Abstract Request.
  */
 
 namespace Omnipay\Bpoint\Message;
+
 use Money\Currency;
 use Money\Money;
 use Money\Number;
 use Money\Parser\DecimalMoneyParser;
+use Omnipay\Bpoint\Gateway;
 use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Common\Message\AbstractRequest as CommonAbstractRequest;
+use Omnipay\Common\Message\ResponseInterface;
 
 /**
  * Bpoint Abstract Request.
@@ -33,88 +39,58 @@ use Omnipay\Common\Exception\InvalidRequestException;
  * You can use any of the cards listed at https://bpoint.com/docs/testing
  * for testing.
  *
- * @see \Omnipay\Bpoint\Gateway
+ * @see Gateway
  * @link https://bpoint.com/docs/api
+ * @method getEndpoint()
  */
-abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
+abstract class AbstractRequest extends CommonAbstractRequest
 {
     /**
      * Live or Test Endpoint URL.
      */
-    public function getEndpointBase()
+    public function getEndpointBase(): ?string
     {
         return $this->getParameter('endpointBase');
     }
 
-    public function setEndpointBase($value)
+    public function setEndpointBase(?string $value): AbstractRequest
     {
         return $this->setParameter('endpointBase', $value);
     }
 
-    /**
-     * @return string
-     */
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return $this->getParameter('username');
     }
 
-    /**
-     * @param $value
-     *
-     * @return AbstractRequest provides a fluent interface.
-     */
-    public function setUsername($value)
+    public function setUsername(?string $value): AbstractRequest
     {
         return $this->setParameter('username', $value);
     }
 
-    /**
-     * @return string
-     */
-    public function getMerchantNumber()
+    public function getMerchantNumber(): ?string
     {
         return $this->getParameter('merchantNumber');
     }
 
-    /**
-     * @param $value
-     *
-     * @return AbstractRequest provides a fluent interface.
-     */
-    public function setMerchantNumber($value)
+    public function setMerchantNumber(?string $value): AbstractRequest
     {
         return $this->setParameter('merchantNumber', $value);
     }
 
-    /**
-     * @return string
-     */
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->getParameter('password');
     }
 
-    /**
-     * @param $value
-     *
-     * @return AbstractRequest provides a fluent interface.
-     */
-    public function setPassword($value)
+    public function setPassword(?string $value): AbstractRequest
     {
         return $this->setParameter('password', $value);
     }
 
-    abstract protected function createResponse($data);
+    abstract protected function createResponse(mixed $data): ResponseInterface;
 
-    /**
-     * Get HTTP Method.
-     *
-     * This is nearly always POST but can be over-ridden in sub classes.
-     *
-     * @return string
-     */
-    public function getHttpMethod()
+    public function getHttpMethod(): string
     {
         return 'POST';
     }
@@ -122,7 +98,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     /**
      * {@inheritdoc}
      */
-    public function sendData($data)
+    public function sendData(mixed $data): ResponseInterface
     {
         $authString = $this->getUsername() . '|' . $this->getMerchantNumber() . ':' . $this->getPassword();
         $headers = [
@@ -130,18 +106,15 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             'Content-Type' => 'application/json; charset=utf-8',
         ];
         $body = json_encode($data);
-        $httpResponse = $this->httpClient->request($this->getHttpMethod(), $this->getEndpoint(), $headers, $body);
+        $httpResponse = $this->httpClient->request($this->getHttpMethod(), $this->getEndpoint(), $headers, $body ?: null);
 
         return $this->createResponse($httpResponse->getBody()->getContents());
     }
 
     /**
-     * @param string $parameterName
-     *
-     * @return mixed|\Money\Money|null
-     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     * @throws InvalidRequestException
      */
-    public function getMoney($parameterName = 'amount')
+    public function getMoney(string $parameterName = 'amount'): ?Money
     {
         $amount = $this->getParameter($parameterName);
 
@@ -163,7 +136,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
                 throw new InvalidRequestException('Amount precision is too high for currency.');
             }
 
-            $money = $moneyParser->parse((string) $number, $currency->getCode());
+            $money = $moneyParser->parse((string) $number, $currency);
 
             // Check for a negative amount.
             if (!$this->negativeAmountAllowed && $money->isNegative()) {
@@ -177,18 +150,15 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
             return $money;
         }
+
+        return null;
     }
 
     /**
-     * Filter a string value so it will not break the API request.
-     *
-     * @param     $string
-     * @param int $maxLength
-     *
-     * @return bool|string
+     * Filter a string value, so it will not break the API request.
      */
-    protected function filter($string, $maxLength = 50)
+    protected function filter(?string $string, int $maxLength = 50): string
     {
-        return substr(preg_replace('/[^a-zA-Z0-9 \-]/', '', $string), 0, $maxLength);
+        return substr((string) preg_replace('/[^a-zA-Z0-9 \-]/', '', (string) $string), 0, $maxLength);
     }
 }

@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Bpoint\Message;
 
 class CreateTokenResponse extends AbstractResponse
 {
-    /**
-     * @return bool
-     */
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
         if (!parent::isSuccessful()) {
             return false;

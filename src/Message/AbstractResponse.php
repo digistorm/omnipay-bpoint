@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Bpoint Response.
  */
+
 namespace Omnipay\Bpoint\Message;
 
+use Omnipay\Common\Message\AbstractResponse as CommonAbstractResponse;
 use Omnipay\Common\Message\RequestInterface;
 
 /**
@@ -14,21 +18,21 @@ use Omnipay\Common\Message\RequestInterface;
  *
  * @see \Omnipay\Bpoint\Gateway
  */
-abstract class AbstractResponse extends \Omnipay\Common\Message\AbstractResponse
+abstract class AbstractResponse extends CommonAbstractResponse
 {
-    public function __construct(RequestInterface $request, $data)
+    public function __construct(RequestInterface $request, mixed $data)
     {
         parent::__construct($request, $data);
 
-        $arrayData = json_decode($data, true);
+        $arrayData = json_decode((string) $data, true);
 
         if (is_array($arrayData)) {
             $this->data = $arrayData;
         } else {
-            if (preg_match('/^\<!doctype html/i', $data) && preg_match('/\<title>([^<]+)\<\/title>/i', $data, $matches)) {
+            if (preg_match('/^<!doctype html/i', (string) $data) && preg_match('/<title>([^<]+)<\/title>/i', (string) $data, $matches)) {
                 $errorString = $matches[1];
             } else {
-                $errorString = substr($data, 0, 255);
+                $errorString = substr((string) $data, 0, 255);
             }
             $this->data = [
                 'ErrorString' => $errorString,
@@ -39,10 +43,8 @@ abstract class AbstractResponse extends \Omnipay\Common\Message\AbstractResponse
 
     /**
      * Is the transaction successful?
-     *
-     * @return bool
      */
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
         if (!isset($this->data['APIResponse']) || !isset($this->data['APIResponse']['ResponseCode'])) {
             return false;
@@ -53,10 +55,8 @@ abstract class AbstractResponse extends \Omnipay\Common\Message\AbstractResponse
 
     /**
      * Get a token, for createToken requests.
-     *
-     * @return string|null
      */
-    public function getToken()
+    public function getToken(): ?string
     {
         if (!isset($this->data['DVTokenResp']) || !isset($this->data['DVTokenResp']['DVToken'])) {
             return null;
@@ -69,39 +69,27 @@ abstract class AbstractResponse extends \Omnipay\Common\Message\AbstractResponse
      * Get the error message from the response.
      *
      * Returns null if the request was successful.
-     *
-     * @return string|null
      */
-    public function getMessage()
+    public function getMessage(): ?string
     {
         if (!$this->isSuccessful() && isset($this->data['APIResponse']) && isset($this->data['APIResponse']['ResponseText'])) {
             return $this->data['APIResponse']['ResponseText'];
         }
 
-        if (isset($this->data['ErrorString'])) {
-            return $this->data['ErrorString'];
-        }
-
-        return null;
+        return $this->data['ErrorString'] ?? null;
     }
 
     /**
      * Get the error message from the response.
      *
      * Returns null if the request was successful.
-     *
-     * @return string|null
      */
-    public function getCode()
+    public function getCode(): ?string
     {
         if (!$this->isSuccessful() && isset($this->data['APIResponse']) && isset($this->data['APIResponse']['ResponseCode'])) {
             return $this->data['APIResponse']['ResponseCode'];
         }
 
-        if (isset($this->data['ErrorCode'])) {
-            return $this->data['ErrorCode'];
-        }
-
-        return null;
+        return $this->data['ErrorCode'] ?? null;
     }
 }

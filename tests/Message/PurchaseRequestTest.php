@@ -1,24 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Bpoint\Message;
 
+use JetBrains\PhpStorm\NoReturn;
 use Omnipay\Tests\TestCase;
 
 class PurchaseRequestTest extends TestCase
 {
-    public function setUp()
+    public $request;
+
+    public function setUp(): void
     {
         $this->request = new PurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
         $this->request->initialize(
-            array(
-                'amount' => '10.00',
-                'currency' => 'USD',
-                'card' => $this->getValidCard(),
-            )
+            ['amount' => '10.00', 'currency' => 'USD', 'card' => $this->getValidCard()]
         );
     }
 
-    public function testSendSuccess()
+    public function testSendSuccess(): void
     {
         $this->setMockHttpResponse('PurchaseSuccess.txt');
         $response = $this->request->send();
@@ -28,7 +29,8 @@ class PurchaseRequestTest extends TestCase
         $this->assertNull($response->getMessage());
     }
 
-    public function testSendError()
+    #[NoReturn]
+    public function testSendError(): void
     {
         $this->markTestIncomplete('Need to get failure response');
 
@@ -42,7 +44,7 @@ class PurchaseRequestTest extends TestCase
         $this->assertSame('Your card was declined', $response->getMessage());
     }
 
-    public function testBillerCode()
+    public function testBillerCode(): void
     {
         $this->assertSame($this->request, $this->request->setBillerCode('abc123'));
         $this->assertSame('abc123', $this->request->getBillerCode());
