@@ -1,77 +1,49 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Bpoint\Traits;
+
+use Omnipay\Bpoint\Message\AbstractRequest;
 
 trait CommonParametersTrait
 {
-    /**
-     * @return mixed
-     */
-    public function getCrn1()
+    public function getCrn1(): ?string
     {
         return $this->getParameter('crn1');
     }
 
-    /**
-     * @param string $value
-     *
-     * @return \Omnipay\Bpoint\Message\AbstractRequest provides a fluent interface.
-     */
-    public function setCrn1($value)
+    public function setCrn1(?string $value): AbstractRequest
     {
         return $this->setParameter('crn1', $value);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCrn2()
+    public function getCrn2(): ?string
     {
         return $this->getParameter('crn2');
     }
 
-    /**
-     * @param string $value
-     *
-     * @return \Omnipay\Bpoint\Message\AbstractRequest provides a fluent interface.
-     */
-    public function setCrn2($value)
+    public function setCrn2(?string $value): AbstractRequest
     {
         return $this->setParameter('crn2', $value);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCrn3()
+    public function getCrn3(): ?string
     {
         return $this->getParameter('crn3');
     }
 
-    /**
-     * @param string $value
-     *
-     * @return \Omnipay\Bpoint\Message\AbstractRequest provides a fluent interface.
-     */
-    public function setCrn3($value)
+    public function setCrn3(?string $value): AbstractRequest
     {
         return $this->setParameter('crn3', $value);
     }
 
-    /**
-     * @return string
-     */
-    public function getBillerCode()
+    public function getBillerCode(): ?string
     {
         return $this->getParameter('billerCode');
     }
 
-    /**
-     * @param $value
-     *
-     * @return AbstractRequest provides a fluent interface.
-     */
-    public function setBillerCode($value)
+    public function setBillerCode(?string $value): AbstractRequest
     {
         return $this->setParameter('billerCode', $value);
     }

@@ -1,27 +1,23 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Omnipay\Bpoint\Message;
 
 use Omnipay\Bpoint\Traits\CommonParametersTrait;
+use Omnipay\Common\Exception\InvalidCreditCardException;
 use Omnipay\Common\Exception\InvalidRequestException;
 
-/**
- *
- */
 class CreateTokenRequest extends AbstractRequest
 {
     use CommonParametersTrait;
 
     /**
      * Get request data array to create a token.
-     *
-     * @return array
-     *
-     * @throws \Omnipay\Common\Exception\InvalidRequestException
-     * @throws \Omnipay\Common\Exception\InvalidCreditCardException
+     * @throws InvalidRequestException
+     * @throws InvalidCreditCardException
      */
-    public function getData()
+    public function getData(): array
     {
         $data = [];
 
@@ -59,22 +55,12 @@ class CreateTokenRequest extends AbstractRequest
         return $data;
     }
 
-    /**
-     * @inheritdoc
-     *
-     * @return string The endpoint for the create token request.
-     */
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return parent::getEndpointBase() . '/dvtokens';
     }
 
-    /**
-     * @param       $data
-     *
-     * @return \Omnipay\Bpoint\Message\CreateTokenResponse
-     */
-    protected function createResponse($data)
+    protected function createResponse(mixed $data): CreateTokenResponse
     {
         return $this->response = new CreateTokenResponse($this, $data);
     }

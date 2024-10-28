@@ -1,8 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Bpoint;
 
+use Carbon\Carbon;
+use Omnipay\Bpoint\Message\CreateTokenRequest;
+use Omnipay\Bpoint\Message\PurchaseRequest;
 use Omnipay\Common\CreditCard;
+use Omnipay\Common\Exception\InvalidCreditCardException;
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Tests\GatewayTestCase;
 
 /**
@@ -10,7 +17,7 @@ use Omnipay\Tests\GatewayTestCase;
  */
 class GatewayTest extends GatewayTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -18,18 +25,16 @@ class GatewayTest extends GatewayTestCase
         $this->gateway->setTestMode(true);
     }
 
-    /**
-     *
-     */
-    public function testCreateToken()
+    public function testCreateToken(): void
     {
+        $year = Carbon::now()->addYear();
         $request = $this->gateway->createToken([
             'card' => new CreditCard([
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'number' => '424242424242',
                 'expiryMonth' => '03',
-                'expiryYear' => '2020',
+                'expiryYear' => $year->format('Y'),
                 'cvv' => '123',
             ]),
             'crn1' => '12345',
@@ -37,32 +42,33 @@ class GatewayTest extends GatewayTestCase
             'crn3' => null,
         ]);
 
-        $this->assertInstanceOf('Omnipay\Bpoint\Message\CreateTokenRequest', $request);
+        $this->assertInstanceOf(CreateTokenRequest::class, $request);
         $data = $request->getData();
 
         $expectedCardDetails = [
             'CardHolderName' => 'John Doe',
             'CardNumber' => '424242424242',
             'Cvn' => '123',
-            'ExpiryDate' => '0320',
+            'ExpiryDate' => '03' . $year->format('y'),
         ];
 
-        $this->assertEquals(true,                   $data['DVTokenReq']['TestMode']);
-        $this->assertEquals(null,                   $data['DVTokenReq']['BankAccountDetails']);
-        $this->assertEquals($expectedCardDetails,   $data['DVTokenReq']['CardDetails']);
-        $this->assertEquals(true,                   $data['DVTokenReq']['AcceptBADirectDebitTC']);
-        $this->assertEquals(null,                   $data['DVTokenReq']['EmailAddress']);
-        $this->assertEquals('12345',                $data['DVTokenReq']['Crn1']);
-        $this->assertEquals('',                     $data['DVTokenReq']['Crn2']);
-        $this->assertEquals(null,                   $data['DVTokenReq']['Crn3']);
+        $this->assertEquals(true, $data['DVTokenReq']['TestMode']);
+        $this->assertEquals(null, $data['DVTokenReq']['BankAccountDetails']);
+        $this->assertEquals($expectedCardDetails, $data['DVTokenReq']['CardDetails']);
+        $this->assertEquals(true, $data['DVTokenReq']['AcceptBADirectDebitTC']);
+        $this->assertEquals(null, $data['DVTokenReq']['EmailAddress']);
+        $this->assertEquals('12345', $data['DVTokenReq']['Crn1']);
+        $this->assertEquals('', $data['DVTokenReq']['Crn2']);
+        $this->assertEquals(null, $data['DVTokenReq']['Crn3']);
     }
 
     /**
-     * @throws \Omnipay\Common\Exception\InvalidCreditCardException
-     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     * @throws InvalidCreditCardException
+     * @throws InvalidRequestException
      */
-    public function testPurchase()
+    public function testPurchase(): void
     {
+        $year = Carbon::now()->addYear();
         $request = $this->gateway->purchase([
             'amount' => '10.00',
             'currency' => 'AUD',
@@ -72,7 +78,7 @@ class GatewayTest extends GatewayTestCase
                 'lastName' => 'Doe',
                 'number' => '5999999789012346',
                 'expiryMonth' => '03',
-                'expiryYear' => '2020',
+                'expiryYear' => $year->format('Y'),
                 'cvv' => '123',
             ]),
             'crn1' => '12345',
@@ -80,7 +86,7 @@ class GatewayTest extends GatewayTestCase
             'crn3' => null,
         ]);
 
-        $this->assertInstanceOf('Omnipay\Bpoint\Message\PurchaseRequest', $request);
+        $this->assertInstanceOf(PurchaseRequest::class, $request);
         $this->assertSame('10.00', $request->getAmount());
 
         $data = $request->getData();
@@ -89,26 +95,17 @@ class GatewayTest extends GatewayTestCase
             'CardHolderName' => 'John Doe',
             'CardNumber' => '5999999789012346',
             'Cvn' => '123',
-            'ExpiryDate' => '0320',
+            'ExpiryDate' => '03' . $year->format('y'),
         ];
 
         $this->assertEquals(true, $data['TxnReq']['TestMode']);
         $this->assertEquals('payment', $data['TxnReq']['Action']);
         $this->assertEquals(1000, $data['TxnReq']['Amount']);
-//        $this->assertEquals(null, $data['TxnReq']['AmountOriginal']);
-//        $this->assertEquals(null, $data['TxnReq']['AmountSurcharge']);
-        $this->assertEquals($expectedCardDetails,   $data['TxnReq']['CardDetails']);
+        $this->assertEquals($expectedCardDetails, $data['TxnReq']['CardDetails']);
         $this->assertEquals('AUD', $data['TxnReq']['Currency']);
-//        $this->assertEquals(null, $data['TxnReq']['Customer']);
         $this->assertEquals('Here is a description that is over 50 characters l', $data['TxnReq']['MerchantReference']);
-//        $this->assertEquals(null, $data['TxnReq']['Order']);
-//        $this->assertEquals(null, $data['TxnReq']['OriginalTxnNumber']);
         $this->assertEquals(null, $data['TxnReq']['StoreCard']);
         $this->assertEquals('single', $data['TxnReq']['SubType']);
-//        $this->assertEquals(null, $data['TxnReq']['TokenisationMode']);
         $this->assertEquals('internet', $data['TxnReq']['Type']);
-//        $this->assertEquals(null, $data['TxnReq']['FraudScreeningRequest']);
-//        $this->assertEquals(null, $data['TxnReq']['StatementDescriptor']);
-
     }
 }

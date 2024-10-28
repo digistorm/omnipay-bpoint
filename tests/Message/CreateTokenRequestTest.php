@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: pedro
@@ -8,55 +11,51 @@
 
 namespace Omnipay\Bpoint\Message;
 
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Tests\TestCase;
 
 class CreateTokenRequestTest extends TestCase
 {
-    /**
-     * @var CreateTokenRequest $request
-     */
-    private $request;
+    private CreateTokenRequest $request;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->request = new CreateTokenRequest($this->getHttpClient(), $this->getHttpRequest());
         $this->request->setEndpointBase('http://example.com');
     }
 
-    public function testEndpoint()
+    public function testEndpoint(): void
     {
         $this->assertSame('http://example.com/dvtokens', $this->request->getEndpoint());
     }
 
-    /**
-     * @expectedException \Omnipay\Common\Exception\InvalidRequestException
-     * @expectedExceptionMessage You must pass a "card" parameter.
-     */
-    public function testGetDataInvalid()
+    public function testGetDataInvalid(): void
     {
+        $this->expectException(InvalidRequestException::class);
+        $this->expectExceptionMessage('You must pass a "card" parameter.');
         $this->request->setCard(null);
 
         $this->request->getData();
     }
 
-    public function testGetDataWithCard()
+    public function testGetDataWithCard(): void
     {
         $card = $this->getValidCard();
         $this->request->setCard($card);
 
         $data = $this->request->getData();
 
-        $expiryDate = sprintf('%02d', $card['expiryMonth']) . substr($card['expiryYear'], -2);
+        $expiryDate = sprintf('%02d', $card['expiryMonth']) . substr((string) $card['expiryYear'], -2);
         $name = $card['firstName'] . ' ' . $card['lastName'];
 
-        $this->assertSame($card['number'],  $data['DVTokenReq']['CardDetails']['CardNumber']);
-        $this->assertSame($expiryDate,      $data['DVTokenReq']['CardDetails']['ExpiryDate']);
-        $this->assertSame($card['cvv'],     $data['DVTokenReq']['CardDetails']['Cvn']);
-        $this->assertSame($name,            $data['DVTokenReq']['CardDetails']['CardHolderName']);
+        $this->assertSame($card['number'], $data['DVTokenReq']['CardDetails']['CardNumber']);
+        $this->assertSame($expiryDate, $data['DVTokenReq']['CardDetails']['ExpiryDate']);
+        $this->assertSame($card['cvv'], $data['DVTokenReq']['CardDetails']['Cvn']);
+        $this->assertSame($name, $data['DVTokenReq']['CardDetails']['CardHolderName']);
     }
 
-    public function testResponseFailure()
+    public function testResponseFailure(): void
     {
         $this->markTestIncomplete('Need to get failure response');
 
@@ -68,7 +67,7 @@ class CreateTokenRequestTest extends TestCase
         $this->assertNull($response->getTransactionReference());
     }
 
-    public function testResponseSuccess()
+    public function testResponseSuccess(): void
     {
         $card = $this->getValidCard();
         $this->request->setCard($card);

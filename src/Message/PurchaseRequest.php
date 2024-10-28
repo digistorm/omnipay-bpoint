@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Bpoint\Message;
 
 use Omnipay\Bpoint\Traits\CommonParametersTrait;
+use Omnipay\Common\CreditCard;
+use Omnipay\Common\Exception\InvalidCreditCardException;
 use Omnipay\Common\Exception\InvalidRequestException;
 
 /**
@@ -14,13 +18,10 @@ class PurchaseRequest extends AbstractRequest
 
     /**
      * Get request data array to process a purchase.
-     *
-     * @return array|mixed
-     *
-     * @throws \Omnipay\Common\Exception\InvalidCreditCardException
-     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     * @throws InvalidCreditCardException
+     * @throws InvalidRequestException
      */
-    public function getData()
+    public function getData(): array
     {
         $this->validate('amount', 'currency');
 
@@ -28,7 +29,7 @@ class PurchaseRequest extends AbstractRequest
             throw new InvalidRequestException('You must pass a "card" parameter.');
         }
 
-        /* @var $card \OmniPay\Common\CreditCard */
+        /* @var $card CreditCard */
         $card = $this->getParameter('card');
         $card->validate();
 
@@ -68,53 +69,27 @@ class PurchaseRequest extends AbstractRequest
             $payload['BillerCode'] = $this->filter($this->getBillerCode());
         }
 
-        // Currently unsupported optional params
-//        $payload['AmountOriginal'] = null;
-//        $payload['Customer'] = null;
-//        $payload['EmailAddress'] = null;
-//        $payload['FraudScreeningRequest'] = null;
-//        $payload['Order'] = null;
-//        $payload['OriginalTxnNumber'] = null;
-//        $payload['StatementDescriptor'] = null;
-//        $payload['TokenisationMode'] = null;
-
         $data['TxnReq'] = $payload;
 
         return $data;
     }
 
-    /**
-     * @return string
-     */
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return parent::getEndpointBase() . '/txns';
     }
 
-    /**
-     * @return integer
-     */
-    public function getAmountSurcharge()
+    public function getAmountSurcharge(): ?string
     {
         return $this->getParameter('amountSurcharge');
     }
 
-    /**
-     * @param string $value
-     *
-     * @return \Omnipay\Bpoint\Message\AbstractRequest provides a fluent interface.
-     */
-    public function setAmountSurcharge($value)
+    public function setAmountSurcharge(string $value): AbstractRequest
     {
         return $this->setParameter('amountSurcharge', $value);
     }
 
-    /**
-     * @param       $data
-     *
-     * @return \Omnipay\Bpoint\Message\PurchaseResponse
-     */
-    protected function createResponse($data)
+    protected function createResponse(mixed $data): PurchaseResponse
     {
         return $this->response = new PurchaseResponse($this, $data);
     }
