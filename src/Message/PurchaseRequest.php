@@ -79,14 +79,14 @@ class PurchaseRequest extends AbstractRequest
         return parent::getEndpointBase() . '/txns';
     }
 
-    public function getAmountSurcharge(): ?string
+    public function getAmountSurcharge(): ?int
     {
         return $this->getParameter('amountSurcharge');
     }
 
-    public function setAmountSurcharge(string $value): AbstractRequest
+    public function setAmountSurcharge(string|int|null $value): AbstractRequest
     {
-        return $this->setParameter('amountSurcharge', $value);
+        return $this->setParameterAsInt('amountSurcharge', $value, true);
     }
 
     protected function createResponse(mixed $data): PurchaseResponse
