@@ -161,4 +161,17 @@ abstract class AbstractRequest extends CommonAbstractRequest
     {
         return substr((string) preg_replace('/[^a-zA-Z0-9 \-]/', '', (string) $string), 0, $maxLength);
     }
+
+    protected function setParameterAsInt(string $key, string|int|null $value, bool $removeNull = false): self
+    {
+        if ($removeNull && $value === null) {
+            $this->parameters->remove($key);
+        } elseif ($value !== null) {
+            $this->parameters->set($key, (int) $value);
+        } else {
+            $this->parameters->set($key, null);
+        }
+
+        return $this;
+    }
 }
