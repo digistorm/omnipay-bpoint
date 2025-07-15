@@ -249,7 +249,7 @@ class PurchaseResponse extends AbstractResponse
      *
      * Returns null if the request was successful.
      */
-    public function getCode(): ?string
+    public function getCode(): string|int|null
     {
         if (!parent::isSuccessful() && isset($this->data['APIResponse']) && isset($this->data['APIResponse']['ResponseCode'])) {
             return $this->data['APIResponse']['ResponseCode'];
