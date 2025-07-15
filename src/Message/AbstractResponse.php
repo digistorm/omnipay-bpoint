@@ -84,7 +84,7 @@ abstract class AbstractResponse extends CommonAbstractResponse
      *
      * Returns null if the request was successful.
      */
-    public function getCode(): ?string
+    public function getCode(): string|int|null
     {
         if (!$this->isSuccessful() && isset($this->data['APIResponse']) && isset($this->data['APIResponse']['ResponseCode'])) {
             return $this->data['APIResponse']['ResponseCode'];

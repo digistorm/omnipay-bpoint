@@ -20,16 +20,13 @@ class ResponseTest extends TestCase
 
     public function testPurchaseFailure(): void
     {
-        $this->markTestIncomplete('Need to get failure response');
-
+        // This failure response is incomplete, currently mocked with the data we have
         $httpResponse = $this->getMockHttpResponse('PurchaseFailure.txt');
         $response = new CreateTokenResponse($this->getMockRequest(), (string) $httpResponse->getBody());
 
+        $code = $response->getCode();
+
         $this->assertFalse($response->isSuccessful());
-        $this->assertFalse($response->isRedirect());
-        $this->assertSame('ch_1IUAZQWFYrPooM', $response->getTransactionReference());
-        $this->assertNull($response->getCardReference());
-        $this->assertSame('Your card was declined', $response->getMessage());
-        $this->assertNull($response->getSource());
+        $this->assertEquals(1, $code);
     }
 }
