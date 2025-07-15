@@ -27,6 +27,6 @@ class ResponseTest extends TestCase
         $code = $response->getCode();
 
         $this->assertFalse($response->isSuccessful());
-        $this->assertEquals($code, 1);
+        $this->assertEquals(1, $code);
     }
 }
