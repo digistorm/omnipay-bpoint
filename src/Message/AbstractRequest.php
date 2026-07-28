@@ -159,7 +159,7 @@ abstract class AbstractRequest extends CommonAbstractRequest
      */
     protected function filter(?string $string, int $maxLength = 50): string
     {
-        return substr((string) preg_replace('/[^a-zA-Z0-9 \-]/', '', (string) $string), 0, $maxLength);
+        return substr((string) preg_replace('/[^a-zA-Z0-9 \-()|._\/]/', '', (string) $string), 0, $maxLength);
     }
 
     protected function setParameterAsInt(string $key, string|int|null $value, bool $removeNull = false): self

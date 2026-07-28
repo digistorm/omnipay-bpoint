@@ -34,4 +34,13 @@ class AbstractRequestTest extends TestCase
         $this->assertSame($this->request, $this->request->setMerchantNumber('abc123'));
         $this->assertSame('abc123', $this->request->getMerchantNumber());
     }
+
+    public function testFilterPreservesAllowedSpecialCharacters(): void
+    {
+        $input = 'Enrolment Application F (210-49202-6420---210|GST)';
+        $method = new \ReflectionMethod(AbstractRequest::class, 'filter');
+        $method->setAccessible(true);
+        $result = $method->invoke($this->request, $input);
+        $this->assertSame($input, $result);
+    }
 }
